@@ -32,6 +32,7 @@ print(float(A))
 omega = (X.T*Y)/(Y.T*Y)
 omega = float(omega)
 W = omega*Y
+print(W)
 
 # Vector Projection (3 차원, B -> A)
 
