@@ -82,35 +82,61 @@ def main(*args):
     # step 2 : Feature scaling
 
 
-
     # For classification (ex. Image, Natural language) --> preprocessingData
 
-    preprocessingData = rawData
+    preprocessing_data = rawData
 
     # X (Independent variable) & Y (Dependent variable) Split
 
-    independentVar = preprocessingData.loc[:, ["Temperature", "Humidity", "Light", "CO2", "HumidityRatio"]]
-    dependentVar = preprocessingData.loc[:, ["Occupancy"]]
+    independent_var = preprocessing_data.loc[:, ["Temperature", "Humidity", "Light", "CO2", "HumidityRatio"]]
+    dependent_var = preprocessing_data.loc[:, ["Occupancy"]]
 
     # Train & Test Split (독립변수, 의존변수, Shuffle 유무, Test Set 사이즈)
 
-    x_train, x_test, y_train, y_test = preprocessing.train_test_split(independentVar, dependentVar, True, 0.2)
+    x_train, x_test, y_train, y_test = preprocessing.train_test_split(independent_var, dependent_var, True, 0.2)
 
     logger.info("preprocessing end..")
+
 
     ##################################################################
 
     # Third : Build Model
 
+    logger.info("build Model start..")
+
+    import logistic_regression
+
+    x_train = x_train.values
+    y_train = y_train.values.ravel()
+
+    logistic_model = logistic_regression.regression(x_train, y_train)
+
+    logger.info("build Model end..")
+
     ##################################################################
 
     # Fourth : Test & Tuning Model
+
+    logger.info("test start..")
+
+    from sklearn import metrics
+
+    y_pred = logistic_model.predict(x_test)
+    print('logistic_model 정확도 :', metrics.accuracy_score(y_test, y_pred))
+
+
+    logger.info("test end..")
 
     ##################################################################
 
     # Fifth : clear memory & Save Output
 
+    logger.info("save start..")
 
+    import joblib
+    joblib.dump(logistic_model, model_output_adrress+"./logistic_model.pkl")
+
+    logger.info("save end..")
     logger.info("Program End..")
 
 
