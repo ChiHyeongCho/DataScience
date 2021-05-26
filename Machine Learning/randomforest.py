@@ -1,8 +1,10 @@
 
-def randomforest(x, y, max_depth, random_state):
+def randomforest(x, y, depth, state):
 
     from sklearn import ensemble
     import numpy as np
 
-    clf = ensemble.RandomForestClassifier(criterion='entropy', n_estimators=100, max_depth=max_depth, random_state=random_state)
-    clf.fit(x, np.ravel(y))
+    model = ensemble.RandomForestClassifier(criterion='entropy', n_estimators=100, max_depth=depth, random_state=state)
+    model.fit(x, np.ravel(y))
+
+    return model

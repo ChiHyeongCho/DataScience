@@ -105,11 +105,15 @@ def main(*args):
     logger.info("build Model start..")
 
     import logistic_regression
+    import randomforest
+    import gradientboosting
 
     x_train = x_train.values
     y_train = y_train.values.ravel()
 
     logistic_model = logistic_regression.regression(x_train, y_train)
+    randomforest_model = randomforest.randomforest(x_train, y_train, 20, 0)
+    xgboost_model = gradientboosting.xgb(x_train, y_train, 0.02, 20)
 
     logger.info("build Model end..")
 
@@ -121,9 +125,17 @@ def main(*args):
 
     from sklearn import metrics
 
-    y_pred = logistic_model.predict(x_test)
-    print('logistic_model 정확도 :', metrics.accuracy_score(y_test, y_pred))
+    y_pred_logistic_model = logistic_model.predict(x_test)
+    print('logistic_model 정확도 :', metrics.accuracy_score(y_test, y_pred_logistic_model))
 
+    y_pred_randomforest_model = randomforest_model.predict(x_test)
+    print('randomforest_model 정확도 :', metrics.accuracy_score(y_test, y_pred_randomforest_model))
+
+    y_pred_xgboost_model = xgboost_model.predict(x_test)
+    print('xgboost_model 정확도 :', metrics.accuracy_score(y_test.values, y_pred_xgboost_model))
+
+    confusion = metrics.confusion_matrix(y_test.values, y_pred_xgboost_model)
+    print(confusion)
 
     logger.info("test end..")
 
