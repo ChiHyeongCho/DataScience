@@ -15,13 +15,22 @@ def read_csv(address):
     import pandas as pd
 
     data = pd.read_csv(address)
+    print("데이터 shape \n {}".format(data.shape))
+    print("데이터 5개 미리보기 \n {}".format(data.head(5)))
+    print("데이터 정보 \n {}".format(data.info()))
+    print("null값을 가지고 있는 데이터 \n {}".format(data.isnull().sum()))
 
     return data
+
 
 def read_excel(address):
 
     import pandas as pd
 
     data = pd.read_excel(address)
+    print("데이터 shape \n {}".format(data.shape))
+    print("데이터 5개 미리보기 \n {}".format(data.head(5)))
+    print("데이터 정보 \n {}".format(data.info()))
+    print("null값을 가지고 있는 데이터 \n {}".format(data.isnull().sum()))
 
     return data
