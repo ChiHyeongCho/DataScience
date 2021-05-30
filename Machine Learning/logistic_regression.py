@@ -29,8 +29,8 @@ def regression(x, y):
     model = LogisticRegression()
     model.fit(x, y)
 
-    print(model.coef_)
-    print(model.intercept_)
-    print(model.score(x, y))
+    #print(model.coef_)
+    #print(model.intercept_)
+    #print(model.score(x, y))
 
     return model
