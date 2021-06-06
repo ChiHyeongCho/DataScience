@@ -39,7 +39,7 @@ train.drop('Name', axis = 1, inplace = True)
 # 데이터 Mapping
 title_mapping = {"Mr" : 0, "Miss" : 1, "Mrs" : 2, "Master" : 0, "Dr" : 3, "Rev" : 3,
                  "Col" : 3, "Major" : 3, "Mlle" : 3, "Countess" : 3, "Ms" : 3, "Lady" : 3,
-                 "Jonkheer" : 3, "Don" : 3, " Dona" : 3, "Mme" : 3, "Capt" : 3, "Sir" : 0}
+                 "Jonkheer" : 3, "Don" : 3, "Dona" : 3, "Mme" : 3, "Capt" : 3, "Sir" : 0}
 
 
 sex_mapping = {"male" : 0, "female" : 1}
@@ -57,7 +57,7 @@ test["Age"].fillna(test.groupby("Title")["Age"].transform("median"), inplace = T
 # binning 작업 (age)
 
 train["AgeBand"] = pd.cut(train["Age"], 5)
-test["AgeBand"] = pd.cut(test["Age"], 5)
+# test["AgeBand"] = pd.cut(test["Age"], 5)
 
 for dataset in train_test_data:
     dataset.loc[dataset["Age"] <= 16, "Age"] = 0
@@ -74,7 +74,39 @@ for dataset in train_test_data:
     dataset['Embarked'] = dataset['Embarked'].fillna('S')
     dataset["Embarked"] = dataset["Embarked"].map(embarked_mapping)
 
-print(test.isnull().sum())
 
-#print(train_test_data)
-#print(train.head(3))
+# Fare
+
+test["Fare"].fillna(test.groupby("Pclass")["Fare"].transform("median"), inplace = True)
+train["FareBand"] = pd.cut(train["Fare"], 5)
+# test["FareBand"] = pd.cut(test["Fare"], 5)
+
+# print(train[["FareBand", "Survived"]].groupby("FareBand", as_index = False).mean().sort_values(by = "FareBand"))
+
+for dataset in train_test_data:
+    dataset.loc[dataset["Fare"] <= 102, "Fare"] = 0
+    dataset.loc[(dataset["Fare"] > 102) & (dataset["Fare"] <= 204), "Fare"] = 1
+    dataset.loc[(dataset["Fare"] > 204) & (dataset["Fare"] <= 307), "Fare"] = 2
+    dataset.loc[dataset["Fare"] > 307, "Fare"]  = 3
+
+train.drop("AgeBand", axis = 1, inplace = True)
+train.drop("FareBand", axis = 1, inplace = True)
+
+# Cabin & Ticket
+train.drop("Cabin", axis = 1, inplace = True)
+test.drop("Cabin", axis = 1, inplace = True)
+
+train.drop("Ticket", axis = 1, inplace = True)
+test.drop("Ticket", axis = 1, inplace = True)
+
+
+# family Size 생성
+
+train["FamilySize"] = train["SibSp"] + train['Parch'] + 1
+test["FamilySize"] = test["SibSp"] + test['Parch'] + 1
+
+# PassengerId 삭제
+train_data = train.drop(["Survived", "PassengerId"], axis = 1)
+
+
+print(train_data.head(5))
